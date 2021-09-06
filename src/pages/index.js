@@ -4,12 +4,16 @@ import { StaticImage } from 'gatsby-plugin-image'
 
 const IndexPage = () => {
   const [data, setData] = useState([])
-  useEffect(async () => {
-    const result = await fetch(
-      `${process.env.GATSBY_API_URL}/pokemon?limit=10&offset=20`
-    ).then(res => res.json())
-    setData(result.results)
-  })
+
+  let loadPokemons = () => {
+    fetch(
+      `${process.env.GATSBY_API_URL}/pokemon?limit=10`
+    )
+    .then(res => res.json())
+    .then(resp => setData(resp.results))
+    // console.log(result)
+    // setData(result.results)
+  }
   
   return (
     <Layout pageTitle="Gatsby Demo">
@@ -20,9 +24,10 @@ const IndexPage = () => {
       />
 
       <h4>Lets learn random pokemons out of nowhere!</h4>
+      <button onClick={loadPokemons}>Get Pokemons</button>
       <ul>
         {data.map(user => (
-          <li>
+          <li key={user.name}>
             <a href={user.url}>{user.name}</a>
           </li>
         ))}
